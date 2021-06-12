@@ -1,12 +1,15 @@
+import socket.RuntimeUtil;
+
 public class Main {
     public static void main(String[] args) {
-        char a = 'A';
-        String A = String.valueOf(a);
-        char c = '\ufeff';
-        int res = (int)c;
-        //boolean res = Character.isWhitespace(' ');
-        System.out.println(res);
+        long res = RuntimeUtil.getFreeMemory();
+        p(res);
 
+
+    }
+
+    public static void p(Object res) {
+        System.out.println(res);
     }
 
 }

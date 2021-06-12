@@ -15,7 +15,15 @@ public class NioClient implements Closeable {
     private SocketChannel channel;
     private ChannelHandler handler;
 
-    public NioClient init(InetSocketAddress address) throws IOException {
+    public NioClient(String host, int port) {
+        init(new InetSocketAddress(host, port));
+    }
+
+    public NioClient(InetSocketAddress address) {
+        init(address);
+    }
+
+    public NioClient init(InetSocketAddress address) {
         try {
             this.channel = SocketChannel.open();
             channel.configureBlocking(false);
@@ -25,9 +33,19 @@ public class NioClient implements Closeable {
             while (!channel.finishConnect()) {}
 
         } catch (IOException e) {
-            close();
+            try {
+                close();
+            } catch(IOException exception) {
+
+            }
+
             throw new RuntimeException(e);
         }
+        return this;
+    }
+
+    public NioClient setChannelHandler(ChannelHandler handler) {
+        this.handler = handler;
         return this;
     }
 
