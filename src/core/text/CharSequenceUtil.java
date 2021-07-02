@@ -41,6 +41,39 @@ public class CharSequenceUtil {
         return INDEX_NOT_FOUND;
     }
 
+    public static int indexOf(final CharSequence str, CharSequence searchStr, int fromIndex, boolean ignoreCase) {
+        if (str == null || searchStr == null) {
+            return INDEX_NOT_FOUND;
+        }
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        final int endLimit = str.length() - searchStr.length() + 1;
+        if (fromIndex > endLimit) {
+            return INDEX_NOT_FOUND;
+        }
+        if (searchStr.length() == 0) {
+            return fromIndex;
+        }
+        if (ignoreCase == false) {
+            return str.toString().indexOf(searchStr.toString(), fromIndex);
+        }
+
+        for (int i = fromIndex; i < endLimit; i++) {
+            if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
+                return i;
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    public static boolean isSubEquals(CharSequence str1, int start1, CharSequence str2, int start2, int length, boolean ignoreCase) {
+        if (str1 == null || str2 == null) {
+            return false;
+        }
+        return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
+    }
+
     public static boolean isBlank(CharSequence str) {
         int length;
         if ((str == null) || ((length = str.length()) == 0)) {
@@ -59,50 +92,50 @@ public class CharSequenceUtil {
         return cs == null ? null : cs.toString();
     }
 
-//    public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement) {
-//        return replace(str, 0, searchStr, replacement, false);
-//    }
-//
-//    public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
-//        return replace(str, 0, searchStr, replacement, ignoreCase);
-//    }
+    public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement) {
+        return replace(str, 0, searchStr, replacement, false);
+    }
+
+    public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
+        return replace(str, 0, searchStr, replacement, ignoreCase);
+    }
 
 
 
-//    public static String replace(CharSequence str, int fromIndex, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
-//        if (isEmpty(str) || isEmpty(searchStr)) {
-//            return str(str);
-//        }
-//        if (replacement == null) {
-//            replacement = EMPTY;
-//        }
-//
-//        final int strLength = str.length();
-//        final int searchStrLength = searchStr.length();
-//        if (fromIndex > strLength) {
-//            return str(str);
-//        } else if (fromIndex < 0) {
-//            fromIndex = 0;
-//        }
-//
-//        final StrBuilder result = StrBuilder.create(strLength + 16);
-//
-//        if (fromIndex != 0) {
-//            result.append(str.subSequence(0, fromIndex));
-//        }
-//        int preIndex = fromIndex;
-//        int index;
-//        while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
-//            result.append(str.subSequence(preIndex, index));
-//            result.append(replacement);
-//            preIndex = index + searchStrLength;
-//        }
-//        if (preIndex < strLength) {
-//            result.append(str.subSequence(preIndex, strLength));
-//        }
-//        return result.toString();
-//
-//    }
+    public static String replace(CharSequence str, int fromIndex, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
+        if (isEmpty(str) || isEmpty(searchStr)) {
+            return str(str);
+        }
+        if (replacement == null) {
+            replacement = EMPTY;
+        }
+
+        final int strLength = str.length();
+        final int searchStrLength = searchStr.length();
+        if (fromIndex > strLength) {
+            return str(str);
+        } else if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+
+        final StrBuilder result = StrBuilder.create(strLength + 16);
+
+        if (fromIndex != 0) {
+            result.append(str.subSequence(0, fromIndex));
+        }
+        int preIndex = fromIndex;
+        int index;
+        while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
+            result.append(str.subSequence(preIndex, index));
+            result.append(replacement);
+            preIndex = index + searchStrLength;
+        }
+        if (preIndex < strLength) {
+            result.append(str.subSequence(preIndex, strLength));
+        }
+        return result.toString();
+
+    }
 
     public static String replace(CharSequence str, int startInclude, int endExclude, char replaceChar) {
         if (isEmpty(str)) {
