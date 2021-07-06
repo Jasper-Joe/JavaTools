@@ -1,10 +1,16 @@
 package http;
 
+import core.map.MapUtil;
+import core.util.StrUtil;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 
 public class HttpConnection {
     private final URL url;
@@ -21,6 +27,19 @@ public class HttpConnection {
         return new HttpConnection(url, proxy);
     }
 
+
+    public HttpConnection header(Map<String, List<String>> headerMap, boolean isOverride) {
+        if (MapUtil.isNotEmpty(headerMap)) {
+            String name;
+            for (Map.Entry<String, List<String>> entry : headerMap.entrySet()) {
+                name = entry.getKey();
+                for (String value : entry.getValue()) {
+                    this.header(name, StrUtil.nullToEmpty(value), isOverride);
+                }
+            }
+        }
+        return this;
+    }
     public HttpConnection header(String header, String value, boolean isOverride) {
         if (this.conn != null) {
             if (isOverride) {
@@ -55,6 +74,10 @@ public class HttpConnection {
         return proxy;
     }
 
+    public Map<String, List<String>> headers() {
+        return this.conn.getHeaderFields();
+    }
+
     public HttpURLConnection getHttpURLConnection() {
         return conn;
     }
@@ -63,6 +86,7 @@ public class HttpConnection {
         if (cookie != null) {
             header(Header.COOKIE, cookie, true);
         }
+        return this;
     }
 
     public HttpConnection setReadTimeout(int timeout) {
@@ -77,18 +101,57 @@ public class HttpConnection {
         return this;
     }
 
+    public HttpConnection connect() throws IOException{
+        if (this.conn != null) {
+            this.conn.connect();
+        }
+        return this;
+    }
+
+    public HttpConnection disconnect() {
+        if (this.conn != null) {
+            this.conn.disconnect();
+        }
+
+        return this;
+    }
+
+    public InputStream getInputStream() throws IOException {
+        if (this.conn != null) {
+            return this.conn.getInputStream();
+        }
+
+        return null;
+    }
+
+    public InputStream getErrorStream() {
+        if (this.conn != null) {
+            return this.conn.getErrorStream();
+        }
+
+        return null;
+    }
+
+    public int responseCode() throws IOException {
+        if (this.conn != null) {
+            return this.conn.getResponseCode();
+        }
+        return 0;
+    }
+
+
+
+
     private URLConnection openConnection() throws IOException {
         return (this.proxy == null) ? url.openConnection() : url.openConnection(this.proxy);
     }
 
     private HttpURLConnection openHttp() throws IOException {
         final URLConnection conn = openConnection();
-        if (false == conn instanceof HttpURLConnection) {
+        if (!(conn instanceof HttpURLConnection)) {
             throw new HttpException("Http Exception");
         }
 
         return (HttpURLConnection) conn;
     }
-
-//    public static HttpConnection create()
 }
