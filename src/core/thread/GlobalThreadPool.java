@@ -15,4 +15,8 @@ public class GlobalThreadPool {
 
         }
     }
+
+    public static ExecutorService getExecutor() {
+        return executor;
+    }
 }
