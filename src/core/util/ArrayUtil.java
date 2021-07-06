@@ -58,6 +58,15 @@ public class ArrayUtil extends PrimitiveArrayUtil{
         return indexOf(array, value) > INDEX_NOT_FOUND;
     }
 
+    public static <T> boolean contains(char value, char... array) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String toString(Object obj) {
         if (obj == null) {
             return null;
