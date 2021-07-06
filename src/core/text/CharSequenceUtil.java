@@ -24,6 +24,10 @@ public class CharSequenceUtil {
         return !isBlank(str);
     }
 
+    public static boolean startWithIgnoreCase(CharSequence str, CharSequence prefix) {
+        return startWith(str, prefix, true);
+    }
+
     public static boolean startWith(CharSequence str, char c) {
         if (isEmpty(str)) {
             return false;
