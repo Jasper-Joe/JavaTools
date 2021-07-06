@@ -1,5 +1,8 @@
 package core.util;
 
+import core.lang.Matcher;
+
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class ArrayUtil extends PrimitiveArrayUtil{
@@ -7,8 +10,52 @@ public class ArrayUtil extends PrimitiveArrayUtil{
         return array == null || array.length == 0;
     }
 
+    public static boolean isEmpty(Object array) {
+        if (array != null) {
+            if (isArray(array)) {
+                return Array.getLength(array) == 0;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isNotEmpty(Object array) {
+        return !isEmpty(array);
+    }
+
+    public static <T> boolean isNotEmpty(T[] array) {
+        return array != null && array.length != 0;
+    }
+
     public static boolean isArray(Object obj) {
         return obj != null && obj.getClass().isArray();
+    }
+
+
+    public static <T> int indexOf(T[] array, Object value) {
+        return matchIndex((obj) -> ObjectUtil.equal(value, obj), array);
+    }
+    public static <T> int indexOf(T[] array, Object value, int beginIndexInclude) {
+        return matchIndex((obj) -> ObjectUtil.equal(value, obj), beginIndexInclude, array);
+    }
+
+    public static <T> int matchIndex(Matcher<T> matcher, T... array) {
+        return matchIndex(matcher, 0, array);
+    }
+    public static <T> int matchIndex(Matcher<T> matcher, int beginIndexInclude, T... array) {
+        if (isNotEmpty(array)) {
+            for (int i = beginIndexInclude; i < array.length; i++) {
+                if (matcher.match(array[i])) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    public static <T> boolean contains(T[] array, T value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
     }
 
     public static String toString(Object obj) {
