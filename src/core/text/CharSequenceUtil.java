@@ -10,6 +10,39 @@ public class CharSequenceUtil {
     public static final String EMPTY = "";
     public static final String NULL = "null";
 
+    public static String getContainsStr(CharSequence str, CharSequence... testStrs) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
+            return null;
+        }
+
+        for (CharSequence checkStr : testStrs) {
+            if (str.toString().contains(checkStr)) {
+                return checkStr.toString();
+            }
+        }
+        return null;
+    }
+
+    public static boolean containsAny(CharSequence str, CharSequence... testStrs) {
+        return getContainsStr(str, testStrs) != null;
+    }
+
+    public static boolean containsAny(CharSequence str, char... testChars) {
+        if (!isEmpty(str)) {
+            int len = str.length();
+            for (int i = 0; i < len; i++) {
+                if (ArrayUtil.contains(str.charAt(i), testChars)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean containsAny(CharSequence str, CharSequence testStrs) {
+        return getContainsStr(str, testStrs) != null;
+    }
+
     public static String format(CharSequence template, Object... params) {
         if (template == null) {
             return NULL;
@@ -18,6 +51,32 @@ public class CharSequenceUtil {
             return template.toString();
         }
         return StrFormatter.format(template.toString(), params);
+    }
+
+    public static String addPrefixIfNot(CharSequence str, CharSequence prefix) {
+        return prependIfMissing(str, prefix, prefix);
+    }
+
+    public static String prependIfMissing(CharSequence str, CharSequence prefix, CharSequence... prefixes) {
+        return prependIfMissing(str, prefix, false, prefixes);
+    }
+
+    public static String prependIfMissingIgnoreCase(CharSequence str, CharSequence prefix, CharSequence... prefixes) {
+        return prependIfMissing(str, prefix, true, prefixes);
+    }
+
+    public static String prependIfMissing(CharSequence str, CharSequence prefix, boolean ignoreCase, CharSequence... prefixes) {
+        if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
+            return str(str);
+        }
+        if (prefixes != null && prefixes.length > 0) {
+            for (final CharSequence s : prefixes) {
+                if (startWith(str, s, ignoreCase)) {
+                    return str.toString();
+                }
+            }
+        }
+        return prefix.toString().concat(str.toString());
     }
 
     public static boolean isNotBlank(CharSequence str) {
