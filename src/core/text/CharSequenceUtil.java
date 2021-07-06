@@ -1,5 +1,6 @@
 package core.text;
 
+import core.util.ArrayUtil;
 import core.util.CharUtil;
 
 public class CharSequenceUtil {
@@ -7,11 +8,86 @@ public class CharSequenceUtil {
     public static final int INDEX_NOT_FOUND = -1;
 
     public static final String EMPTY = "";
+    public static final String NULL = "null";
+
+    public static String format(CharSequence template, Object... params) {
+        if (template == null) {
+            return NULL;
+        }
+        if (ArrayUtil.isEmpty(params) || isBlank(template)) {
+            return template.toString();
+        }
+        return StrFormatter.format(template.toString(), params);
+    }
+
+    public static boolean isNotBlank(CharSequence str) {
+        return !isBlank(str);
+    }
+
+    public static boolean startWith(CharSequence str, char c) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        return c == str.charAt(0);
+    }
+
+    public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase) {
+        return startWith(str, prefix, ignoreCase, false);
+    }
+
+    public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase, boolean ignoreEquals) {
+        if (str == null || prefix == null) {
+            if (ignoreEquals == false) {
+                return false;
+            }
+            return str == null && prefix == null;
+        }
+
+        boolean isStartWith;
+        if (ignoreCase) {
+            isStartWith = str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase());
+        } else {
+            isStartWith = str.toString().startsWith(prefix.toString());
+        }
+        if (isStartWith) {
+            return (ignoreEquals == false) || (equals(str, prefix, ignoreCase) == false);
+        }
+
+        return false;
+    }
+
+    public static boolean equals(CharSequence str1, CharSequence str2) {
+        return equals(str1, str2, false);
+    }
+
+
+    public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
+        if (str1 == null) {
+            return str2 == null;
+        }
+        if (str2 == null) {
+            return false;
+        }
+
+        if (ignoreCase) {
+            return str1.toString().equalsIgnoreCase(str2.toString());
+        } else {
+            return str1.toString().contentEquals(str2);
+        }
+    }
 
     public static int indexOf(final CharSequence str, char searchChar) {
         return indexOf(str, searchChar, 0);
     }
 
+
+    public static String nullToEmpty(CharSequence str) {
+        return nullToDefault(str, EMPTY);
+    }
+
+    public static String nullToDefault(CharSequence str, String defaultStr) {
+        return (str == null) ? defaultStr : str.toString();
+    }
     public static int indexOf(CharSequence str, char searchChar, int start) {
         if (str instanceof String) {
             return ((String) str).indexOf(searchChar, start);
