@@ -3,12 +3,41 @@ package core.text;
 import core.util.ArrayUtil;
 import core.util.CharUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CharSequenceUtil {
 
     public static final int INDEX_NOT_FOUND = -1;
 
     public static final String EMPTY = "";
     public static final String NULL = "null";
+
+    public static boolean endWith(CharSequence str, char c) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        return str.charAt(str.length() - 1) == c;
+    }
+
+    public static boolean isNotEmpty(CharSequence str) {
+        return !isEmpty(str);
+    }
+
+    public static List<String> split(CharSequence str, char separator) {
+        return split(str, separator, 0);
+    }
+
+    public static List<String> split(CharSequence str, char separator, int limit) {
+        return split(str, separator, limit, false, false);
+    }
+
+    public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+        if (str == null) {
+            return new ArrayList<>();
+        }
+        return StrSplitter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
+    }
 
     public static String getContainsStr(CharSequence str, CharSequence... testStrs) {
         if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
@@ -21,6 +50,75 @@ public class CharSequenceUtil {
             }
         }
         return null;
+    }
+
+    public static String sub(CharSequence str, int fromIndexInclude, int toIndexExclude) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        int len = str.length();
+        if (fromIndexInclude < 0) {
+            fromIndexInclude = len + fromIndexInclude;
+            if (fromIndexInclude < 0) {
+                fromIndexInclude = 0;
+            }
+        } else if (fromIndexInclude > len) {
+            fromIndexInclude = len;
+        }
+
+        if (toIndexExclude < 0) {
+            toIndexExclude = len + toIndexExclude;
+            if (toIndexExclude < 0) {
+                toIndexExclude = len;
+            }
+        } else if (toIndexExclude > len) {
+            toIndexExclude = len;
+        }
+
+        if (toIndexExclude < fromIndexInclude) {
+            int tmp = fromIndexInclude;
+            fromIndexInclude = toIndexExclude;
+            toIndexExclude = tmp;
+        }
+
+        if (fromIndexInclude == toIndexExclude) {
+            return EMPTY;
+        }
+
+        return str.toString().substring(fromIndexInclude, toIndexExclude);
+    }
+
+    public static String subSuf(CharSequence string, int fromIndex) {
+        if (isEmpty(string)) {
+            return null;
+        }
+        return sub(string, fromIndex, string.length());
+    }
+
+    public static String subPre(CharSequence string, int toIndexExclude) {
+        return sub(string, 0, toIndexExclude);
+    }
+
+    public static String removeSuffix(CharSequence str, CharSequence suffix) {
+        if (isEmpty(str) || isEmpty(suffix)) {
+            return str(str);
+        }
+        final String str2 = str.toString();
+        if (str2.endsWith(suffix.toString())) {
+            return subPre(str2, str2.length() - suffix.length());
+        }
+        return str2;
+    }
+
+    public static String removePrefix(CharSequence str, CharSequence prefix) {
+        if (isEmpty(str) || isEmpty(prefix)) {
+            return str(str);
+        }
+        final String str2 = str.toString();
+        if (str2.startsWith(prefix.toString())) {
+            return subSuf(str2, prefix.length());
+        }
+        return str2;
     }
 
     public static boolean containsAny(CharSequence str, CharSequence... testStrs) {

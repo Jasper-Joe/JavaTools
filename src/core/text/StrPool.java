@@ -10,4 +10,5 @@ public interface StrPool {
     String DELIM_START = "{";
     char C_DELIM_START = CharPool.DELIM_START;
     char C_BACKSLASH = CharPool.BACKSLASH;
+    String SLASH = "/";
 }
