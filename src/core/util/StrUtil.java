@@ -72,6 +72,11 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
         }
     }
 
+
+    public static String format(CharSequence template, Map<?, ?> map) {
+        return format(template, map, true);
+    }
+
     public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
         if (template == null) {
             return null;
