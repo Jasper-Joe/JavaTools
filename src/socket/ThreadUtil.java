@@ -1,6 +1,6 @@
 package socket;
 
-import java.util.concurrent.ExecutorService;
+import core.thread.GlobalThreadPool;
 
 public class ThreadUtil {
     public static void execute(Runnable runnable) {

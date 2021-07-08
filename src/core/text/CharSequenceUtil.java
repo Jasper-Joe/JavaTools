@@ -3,6 +3,8 @@ package core.text;
 import core.util.ArrayUtil;
 import core.util.CharUtil;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,24 @@ public class CharSequenceUtil {
 
     public static final String EMPTY = "";
     public static final String NULL = "null";
+
+    public static byte[] bytes(CharSequence str) {
+        return bytes(str, Charset.defaultCharset());
+    }
+
+    public static byte[] bytes(CharSequence str, String charset) {
+        return bytes(str, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+    }
+
+    public static byte[] bytes(CharSequence str, Charset charset) {
+        if (str == null) {
+            return null;
+        }
+        if (charset == null) {
+            return str.toString().getBytes();
+        }
+        return str.toString().getBytes(charset);
+    }
 
     public static boolean endWith(CharSequence str, char c) {
         if (isEmpty(str)) {

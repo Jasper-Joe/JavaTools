@@ -11,6 +11,10 @@ import java.nio.charset.Charset;
 public class URLDecoder implements Serializable {
     private static final byte ESCAPE_CHAR = '%';
 
+    public static String decodeForPath(String str, Charset charset) {
+        return decode(str, charset, false);
+    }
+
     public static String decode(String str, Charset charset, boolean isPlusToSpace) {
         return StrUtil.str(decode(StrUtil.bytes(str, charset), isPlusToSpace), charset);
     }

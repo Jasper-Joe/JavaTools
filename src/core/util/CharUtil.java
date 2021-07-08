@@ -23,6 +23,10 @@ public class CharUtil implements CharPool {
         return isNumber(ch) || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
     }
 
+    public static int digit16(int b) {
+        return Character.digit(b, 16);
+    }
+
     public static boolean isBlankChar(char c) {
         return isBlankChar((int) c);
     }

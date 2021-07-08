@@ -56,7 +56,7 @@ public class GlobalCookieManager {
             throw new IORuntimeException(e);
         }
     }
-    
+
 
     private static URI getURI(HttpConnection conn) {
         return URLUtil.toURI(conn.getUrl());

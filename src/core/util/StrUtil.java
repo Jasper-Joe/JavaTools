@@ -14,6 +14,15 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
         return str(obj, CharsetUtil.CHARSET_UTF_8);
     }
 
+
+    public static StringBuilder builder() {
+        return new StringBuilder();
+    }
+
+    public static StringBuilder builder(int capacity) {
+        return new StringBuilder(capacity);
+    }
+
     public static String str(byte[] data, Charset charset) {
         if (data == null) {
             return null;

@@ -1,6 +1,7 @@
 package core.util;
 
 public class PrimitiveArrayUtil {
+    public static final int INDEX_NOT_FOUND = -1;
     public static boolean isEmpty(long[] array) {
         return array == null || array.length == 0;
     }
